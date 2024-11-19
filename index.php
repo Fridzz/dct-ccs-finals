@@ -1,3 +1,59 @@
+<?php
+// Database connection
+$servername = "localhost"; // Laragon default
+$username = "root";        // Default username
+$password = "";            // Default password
+$dbname = "dct-ccs-finals"; // Database name
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Server-side validation
+$loginMessage = "";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
+    $email = trim($_POST['email']);
+    $password = trim($_POST['password']);
+
+    // Default admin check (hardcoded credentials)
+    $defaultAdminEmail = "admin@example.com"; // Admin email
+    $defaultAdminPassword = "admin123"; // Admin password (plaintext, for simplicity)
+
+    // Check if the entered credentials match the default admin
+    if ($email == $defaultAdminEmail && $password == $defaultAdminPassword) {
+        $loginMessage = "<div class='alert alert-success'>Login successful! Welcome Admin.</div>";
+        // Redirect to admin dashboard
+        header("Location: ../admin/dashboard.php");
+        exit();
+    } else if (!empty($email) && !empty($password)) {
+        // Query to check user credentials for regular users
+        $sql = "SELECT * FROM users WHERE email = ? AND password = ?";
+        $stmt = $conn->prepare($sql);
+        $hashedPassword = md5($password); // Assuming passwords are stored as MD5 hash
+        $stmt->bind_param("ss", $email, $hashedPassword);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            // Login successful for regular user
+            $loginMessage = "<div class='alert alert-success'>Login successful! Welcome.</div>";
+        } else {
+            // Login failed for regular user
+            $loginMessage = "<div class='alert alert-danger'>Invalid email or password.</div>";
+        }
+
+        $stmt->close();
+    } else {
+        $loginMessage = "<div class='alert alert-warning'>Please fill in all fields.</div>";
+    }
+}
+
+$conn->close();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,13 +61,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <title></title>
+    <title>Login</title>
 </head>
 
 <body class="bg-secondary-subtle">
     <div class="d-flex align-items-center justify-content-center vh-100">
         <div class="col-3">
-            <!-- Server-Side Validation Messages should be placed here -->
+            <!-- Server-Side Validation Messages -->
+            <?php echo $loginMessage; ?>
             <div class="card">
                 <div class="card-body">
                     <h1 class="h3 mb-4 fw-normal">Login</h1>
