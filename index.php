@@ -25,7 +25,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
             $errors[] = "Password is required";
         }
     }
-
+    // Check if the email and password are correct (this is an example, adjust for your DB query)
+    if (empty($errors)) {
+        // Assume you have a function called validate_user that checks the email and password in the database
+        if (!validateAdmin($email, $password)) {
+            $errors[] = "Incorrect email or password";
+        }
+    }
 
     // If there are errors, display them
     if (!empty($errors)) {
