@@ -8,31 +8,61 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
     $email = trim($_POST['email']);
     $password = trim($_POST['password']);
 
-    // Check if the entered credentials match the default admin
-    if (validateAdmin($email, $password)) {
-        $loginMessage = "<div class='alert alert-success'>Login successful! Welcome Admin.</div>";
-        // Redirect to admin dashboard
-        header("Location: ../admin/dashboard.php");
-        exit();
-    } else if (!empty($email) && !empty($password)) {
-        // Query to check user credentials for regular users
-        $result = validateUser($email, $password);
+    $errors = [];
 
-        if ($result->num_rows > 0) {
-            // Login successful for regular user
-            $loginMessage = "<div class='alert alert-success'>Login successful! Welcome.</div>";
-        } else {
-            // Login failed for regular user
-            $loginMessage = "<div class='alert alert-danger'>Invalid email or password.</div>";
-        }
+    // Check for empty fields and collect errors
+    if (empty($email) && !empty($password)) {
+        $errors[] = "Email is required";
+        $errors[] = "Invalid password";
+    } else if (!empty($email) && empty($password)) {
+        $errors[] = "Invalid Email";
+        $errors[] = "Password is required";
     } else {
-        $loginMessage = "<div class='alert alert-warning'>Please fill in all fields.</div>";
+        if (empty($email)) {
+            $errors[] = "Email is required";
+        }
+        if (empty($password)) {
+            $errors[] = "Password is required";
+        }
+    }
+
+
+    // If there are errors, display them
+    if (!empty($errors)) {
+        $errorList = "";
+        foreach ($errors as $error) {
+            $errorList .= "<li>" . htmlspecialchars($error) . "</li>";
+        }
+        $loginMessage = "<div class='alert alert-danger'>
+                            <strong>System Errors</strong>
+                            <ul class='mb-0'>$errorList</ul>
+                         </div>";
+    } else {
+        // Check if the entered credentials match the default admin
+        if (validateAdmin($email, $password)) {
+            $loginMessage = "<div class='alert alert-success'>Login successful! Welcome Admin.</div>";
+            // Redirect to admin dashboard
+            header("Location: ../admin/dashboard.php");
+            exit();
+        } else {
+            // Query to check user credentials for regular users
+            $result = validateUser($email, $password);
+
+            if ($result->num_rows > 0) {
+                // Login successful for regular user
+                $loginMessage = "<div class='alert alert-success'>Login successful! Welcome.</div>";
+            } else {
+                // Login failed for regular user
+                $loginMessage = "<div class='alert alert-danger'>Invalid email or password.</div>";
+            }
+        }
     }
 }
 
 // Close the database connection
 closeDbConnection();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
