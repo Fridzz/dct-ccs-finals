@@ -29,7 +29,7 @@ function validateUser($email, $password)
 // Function to check if the default admin credentials are correct
 function validateAdmin($email, $password)
 {
-    $defaultAdminEmail = "admin@example.com"; // Admin email
+    $defaultAdminEmail = "admin@gmail.com"; // Admin email
     $defaultAdminPassword = "admin123"; // Admin password (plaintext, for simplicity)
     return ($email == $defaultAdminEmail && $password == $defaultAdminPassword);
 }
