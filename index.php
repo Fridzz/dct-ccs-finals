@@ -1,42 +1,22 @@
 <?php
-// Database connection
-$servername = "localhost"; // Laragon default
-$username = "root";        // Default username
-$password = "";            // Default password
-$dbname = "dct-ccs-finals"; // Database name
+// Include database connection and validation functions
+include('functions.php');
 
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-// Server-side validation
 $loginMessage = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
     $email = trim($_POST['email']);
     $password = trim($_POST['password']);
 
-    // Default admin check (hardcoded credentials)
-    $defaultAdminEmail = "admin@example.com"; // Admin email
-    $defaultAdminPassword = "admin123"; // Admin password (plaintext, for simplicity)
-
     // Check if the entered credentials match the default admin
-    if ($email == $defaultAdminEmail && $password == $defaultAdminPassword) {
+    if (validateAdmin($email, $password)) {
         $loginMessage = "<div class='alert alert-success'>Login successful! Welcome Admin.</div>";
         // Redirect to admin dashboard
         header("Location: ../admin/dashboard.php");
         exit();
     } else if (!empty($email) && !empty($password)) {
         // Query to check user credentials for regular users
-        $sql = "SELECT * FROM users WHERE email = ? AND password = ?";
-        $stmt = $conn->prepare($sql);
-        $hashedPassword = md5($password); // Assuming passwords are stored as MD5 hash
-        $stmt->bind_param("ss", $email, $hashedPassword);
-        $stmt->execute();
-        $result = $stmt->get_result();
+        $result = validateUser($email, $password);
 
         if ($result->num_rows > 0) {
             // Login successful for regular user
@@ -45,14 +25,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
             // Login failed for regular user
             $loginMessage = "<div class='alert alert-danger'>Invalid email or password.</div>";
         }
-
-        $stmt->close();
     } else {
         $loginMessage = "<div class='alert alert-warning'>Please fill in all fields.</div>";
     }
 }
 
-$conn->close();
+// Close the database connection
+closeDbConnection();
 ?>
 <!DOCTYPE html>
 <html lang="en">
