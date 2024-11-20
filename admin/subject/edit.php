@@ -39,17 +39,19 @@ if (isPost()) {
     </nav>
 
     <!-- Form to edit subject -->
-    <form method="POST" action="">
-        <div class="form-group">
-            <label for="subject_code">Subject ID</label>
-            <input type="text" class="form-control" id="subject_code" name="subject_code" value="<?= htmlspecialchars($subject_data['subject_code']) ?>" readonly>
-        </div>
-        <div class="form-group">
-            <label for="subject_name">Subject Name</label>
-            <input type="text" class="form-control" id="subject_name" name="subject_name" value="<?= htmlspecialchars($subject_data['subject_name']) ?>" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Update Subject</button>
-    </form>
+    <div class="card p-4 mb-5">
+        <form method="POST" action="">
+            <div class="form-group">
+                <label for="subject_code">Subject ID</label>
+                <input type="text" class="form-control" id="subject_code" name="subject_code" value="<?= htmlspecialchars($subject_data['subject_code']) ?>" readonly>
+            </div>
+            <div class="form-group">
+                <label for="subject_name">Subject Name</label>
+                <input type="text" class="form-control" id="subject_name" name="subject_name" value="<?= htmlspecialchars($subject_data['subject_name']) ?>" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm w-100">Update Subject</button>
+        </form>
+    </div>
 </div>
 
 <?php include '../partials/footer.php'; ?>

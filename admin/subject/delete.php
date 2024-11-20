@@ -40,8 +40,8 @@ if (isPost()) {
             <a href="add.php" class="btn btn-secondary">Cancel</a>
             <button type="submit" class="btn btn-primary">Delete Subject Record</button>
         </form>
-
     </div>
+</div>
 
 </div>
 <?php
