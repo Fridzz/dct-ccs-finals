@@ -52,7 +52,7 @@ function login($email, $password)
 {
     $validateLogin = validateLoginCredentials($email, $password);
 
-    if (count($validateLogin) > 0) {
+    if (!empty($validateLogin)) {
         echo displayErrors($validateLogin);
         return;
     }
@@ -89,6 +89,8 @@ function login($email, $password)
 
 function validateLoginCredentials($email, $password)
 {
+    // Initialize the $errors array
+    $errors = [];
     // Check for empty fields and collect errors
     if (empty($email) && !empty($password)) {
         $errors[] = "Email is required";
@@ -109,17 +111,15 @@ function validateLoginCredentials($email, $password)
 }
 
 
-function displayErrors($errors)
+function displayErrors($errors = [])
 {
     if (empty($errors)) return "";
 
     $errorHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert"><strong>System Alerts</strong><ul>';
 
-    // Make sure each error is a string
     foreach ($errors as $error) {
-        // Check if $error is an array or not
+        // Ensure $error is a string or handle arrays properly
         if (is_array($error)) {
-            // If it's an array, convert it to a string (you could adjust this to fit your needs)
             $errorHtml .= '<li>' . implode(", ", $error) . '</li>';
         } else {
             $errorHtml .= '<li>' . htmlspecialchars($error) . '</li>';
@@ -130,6 +130,7 @@ function displayErrors($errors)
 
     return $errorHtml;
 }
+
 // Logout Fuction
 function logout($indexPage)
 {
