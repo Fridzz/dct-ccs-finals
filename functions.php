@@ -240,3 +240,27 @@ function getSubjectCode($subject_code)
     $stmt->execute([':subject_code' => $subject_code]);
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
+
+function deleteSubject($subject_code, $redirectPage)
+{
+    try {
+        // Get the database connection
+        $pdo = getConnection();
+
+        // Prepare the SQL query to delete the subject
+        $sql = "DELETE FROM subjects WHERE subject_code = :subject_code";
+        $stmt = $pdo->prepare($sql);
+
+        // Bind the parameter
+        $stmt->bindParam(':subject_code', $subject_code, PDO::PARAM_STR);
+
+        // Execute the query
+        if ($stmt->execute()) {
+            echo "<script>window.location.href = '$redirectPage';</script>";
+        } else {
+            return "Failed to delete the subject with code $subject_code.";
+        }
+    } catch (PDOException $e) {
+        return "Error: " . $e->getMessage();
+    }
+}

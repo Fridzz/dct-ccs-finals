@@ -8,7 +8,11 @@ $dashboardPage = '../dashboard.php';
 $subjectPage = './add.php';
 include '../partials/side-bar.php';
 
+$subject_data = getSubjectCode($_GET['subject_code']);
 
+if (isPost()) {
+    deleteSubject($subject_data['subject_code'], './add.php');
+}
 ?>
 <div class="col-md-9 col-lg-10">
 
@@ -22,6 +26,24 @@ include '../partials/side-bar.php';
             <li class="breadcrumb-item active" aria-current="page">Delete Subject</li>
         </ol>
     </nav>
-    <?php
-    include '../partials/footer.php';
-    ?>
+
+    <div class="border p-5">
+        <!-- Confirmation Message -->
+        <p class="text-left">Are you sure you want to delete the following subject record?</p>
+        <ul class="text-left">
+            <li><strong>Subject Code:</strong> <?= htmlspecialchars($subject_data['subject_code']) ?></li>
+            <li><strong>Subject Name:</strong> <?= htmlspecialchars($subject_data['subject_name']) ?></li>
+        </ul>
+
+        <!-- Confirmation Form -->
+        <form method="POST" class="text-left">
+            <a href="add.php" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">Delete Subject Record</button>
+        </form>
+
+    </div>
+
+</div>
+<?php
+include '../partials/footer.php';
+?>
