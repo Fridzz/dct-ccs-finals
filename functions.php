@@ -1,5 +1,5 @@
 <?php
-// db.php
+// function.php
 
 // Database connection
 $servername = "localhost"; // Laragon default
