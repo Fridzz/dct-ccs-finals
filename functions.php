@@ -203,3 +203,40 @@ function fetchSubjects()
         return [];
     }
 }
+
+
+function EditSubject($subject_code, $subject_name, $redirectPage)
+{
+
+    try {
+        // Get the database connection
+        $pdo = getConnection();
+
+        // Prepare the SQL query for updating the subject
+        $sql = "UPDATE subjects SET subject_name = :subject_name WHERE subject_code = :subject_code";
+        $stmt = $pdo->prepare($sql);
+
+        // Bind the parameters
+        $stmt->bindParam(':subject_name', $subject_name, PDO::PARAM_STR);
+        $stmt->bindParam(':subject_code', $subject_code, PDO::PARAM_STR);
+
+        // Execute the query
+        if ($stmt->execute()) {
+            echo "<script>window.location.href = '$redirectPage';</script>";
+        } else {
+            //echo displayErrors(["Failed to update subject!"]);
+            return 'Failed to update subject';
+        }
+    } catch (PDOException $e) {
+        // echo displayErrors(["Error: " . $e->getMessage()]);
+        return "Error: " . $e->getMessage();
+    }
+}
+function getSubjectCode($subject_code)
+{
+    $pdo = getConnection();
+    $query = "SELECT * FROM subjects WHERE subject_code = :subject_code";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute([':subject_code' => $subject_code]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
