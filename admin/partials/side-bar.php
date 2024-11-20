@@ -13,7 +13,8 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link d-flex align-items-center gap-2" href="#">
+                    <a class="nav-link d-flex align-items-center gap-2" href="<?= $subjectPage ?? "#" ?>">
+                        <i class="fa-solid fa-book fa-fw me-2"></i>
                         Subjects
                     </a>
                 </li>
