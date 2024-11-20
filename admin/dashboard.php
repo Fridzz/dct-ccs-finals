@@ -1,7 +1,11 @@
+<?php
+require './partials/header.php';
+require './partials/side-bar.php';
+?>
 <!-- Template Files here -->
-<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 pt-5">    
-    <h1 class="h2">Dashboard</h1>        
-    
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 pt-5">
+    <h1 class="h2">Dashboard</h1>
+
     <div class="row mt-5">
         <div class="col-12 col-xl-3">
             <div class="card border-primary mb-3">
@@ -35,6 +39,9 @@
                 </div>
             </div>
         </div>
-    </div>    
+    </div>
 </main>
 <!-- Template Files here -->
+<?php
+require './partials/footer.php';
+?>
