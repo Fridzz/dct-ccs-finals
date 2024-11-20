@@ -144,3 +144,59 @@ function logout($indexPage)
     header("Location: $indexPage");
     exit;
 }
+
+function isPost()
+{
+    return $_SERVER['REQUEST_METHOD'] == "POST";
+}
+
+function addSubject($subject_code, $subject_name)
+{
+
+    // Get database connection
+    $conn = getConnection();
+
+    try {
+        // Prepare SQL query to insert subject into the database
+        $sql = "INSERT INTO subjects (subject_code, subject_name) VALUES (:subject_code, :subject_name)";
+        $stmt = $conn->prepare($sql);
+
+        // Bind parameters to the SQL query
+        $stmt->bindParam(':subject_code', $subject_code);
+        $stmt->bindParam(':subject_name', $subject_name);
+
+        // Execute the query
+        if ($stmt->execute()) {
+            return true; // Subject successfully added
+        } else {
+            return "Failed to add subject."; // Query execution failed
+        }
+    } catch (PDOException $e) {
+        // Return error message if the query fails
+        return "Error: " . $e->getMessage();
+    }
+}
+
+function fetchSubjects()
+{
+    // Get the database connection
+    $conn = getConnection();
+
+    try {
+        // Prepare SQL query to fetch all subjects
+        $sql = "SELECT * FROM subjects";
+        $stmt = $conn->prepare($sql);
+
+        // Execute the query
+        $stmt->execute();
+
+        // Fetch all subjects as an associative array
+        $subjects = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Return the list of subjects
+        return $subjects;
+    } catch (PDOException $e) {
+        // Return an empty array in case of error
+        return [];
+    }
+}
