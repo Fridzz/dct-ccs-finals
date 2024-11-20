@@ -130,6 +130,7 @@ function displayErrors($errors = [])
 
     return $errorHtml;
 }
+// ******************************************************************
 
 // Logout Fuction
 function logout($indexPage)
@@ -144,7 +145,9 @@ function logout($indexPage)
     header("Location: $indexPage");
     exit;
 }
+// ************************************************************************
 
+// Subject
 function isPost()
 {
     return $_SERVER['REQUEST_METHOD'] == "POST";
