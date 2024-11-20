@@ -89,16 +89,20 @@ function login($email, $password)
 
 function validateLoginCredentials($email, $password)
 {
-    $errors = [];
-
-    if (empty($email)) {
-        $errors[] = "Email is required.";
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errors[] = "Invalid email format.";
-    }
-
-    if (empty($password)) {
-        $errors[] = "Password is required.";
+    // Check for empty fields and collect errors
+    if (empty($email) && !empty($password)) {
+        $errors[] = "Email is required";
+        $errors[] = "Invalid password";
+    } else if (!empty($email) && empty($password)) {
+        $errors[] = "Invalid Email";
+        $errors[] = "Password is required";
+    } else {
+        if (empty($email)) {
+            $errors[] = "Email is required";
+        }
+        if (empty($password)) {
+            $errors[] = "Password is required";
+        }
     }
 
     return $errors;
