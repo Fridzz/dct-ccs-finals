@@ -81,6 +81,6 @@ include '../partials/side-bar.php';
 </div>
 
 <?php
-require './partials/footer.php';
+include '../partials/footer.php';
 
 ?>
