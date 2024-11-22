@@ -20,11 +20,33 @@ if (isPost()) {
         $errors[] = "Subject Name is required.";
     }
 
-    // Proceed if there are no validation errors
+    // Check for duplicates if no validation errors
     if (empty($errors)) {
-        $result = addSubject($subject_code, $subject_name);
-        if ($result !== true) {
-            $errors[] = $result; // Add database errors to the error array
+        $conn = getConnection();
+        try {
+            // Check for duplicate Subject Code
+            $stmt = $conn->prepare("SELECT COUNT(*) FROM subjects WHERE subject_code = :subject_code");
+            $stmt->execute([':subject_code' => $subject_code]);
+            if ($stmt->fetchColumn() > 0) {
+                $errors[] = "The Subject Code '$subject_code' is already in use.";
+            }
+
+            // Check for duplicate Subject Name
+            $stmt = $conn->prepare("SELECT COUNT(*) FROM subjects WHERE subject_name = :subject_name");
+            $stmt->execute([':subject_name' => $subject_name]);
+            if ($stmt->fetchColumn() > 0) {
+                $errors[] = "The Subject Name '$subject_name' is already in use.";
+            }
+
+            // If no duplicates, proceed with adding the subject
+            if (empty($errors)) {
+                $result = addSubject($subject_code, $subject_name);
+                if ($result !== true) {
+                    $errors[] = $result; // Add database errors to the error array
+                }
+            }
+        } catch (PDOException $e) {
+            $errors[] = "Database error: " . $e->getMessage();
         }
     }
 }
