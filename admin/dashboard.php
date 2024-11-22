@@ -7,6 +7,8 @@ $subjectPage = './subject/add.php';
 require './partials/header.php';
 require './partials/side-bar.php';
 
+// Get the number of subjects from the database
+$subjectCount = getSubjectCount();
 ?>
 
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 pt-5">
@@ -17,7 +19,7 @@ require './partials/side-bar.php';
             <div class="card border-primary mb-3">
                 <div class="card-header bg-primary text-white border-primary">Number of Subjects:</div>
                 <div class="card-body text-primary">
-                    <h5 class="card-title">0</h5>
+                    <h5 class="card-title"><?= htmlspecialchars($subjectCount) ?></h5>
                 </div>
             </div>
         </div>
@@ -41,14 +43,14 @@ require './partials/side-bar.php';
             <div class="card border-success mb-3">
                 <div class="card-header bg-success text-white border-success">Number of Passed Students:</div>
                 <div class="card-body text-success">
-                    <h5 class="card-title">0></h5>
+                    <h5 class="card-title">0</h5>
                 </div>
             </div>
         </div>
     </div>
 </main>
+
 <!-- Template Files here -->
 <?php
 require './partials/footer.php';
-
 ?>
