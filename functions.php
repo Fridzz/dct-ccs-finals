@@ -264,3 +264,18 @@ function deleteSubject($subject_code, $redirectPage)
         return "Error: " . $e->getMessage();
     }
 }
+
+// SUBJECT COUNT ON DASHBOARD
+
+function getSubjectCount()
+{
+    $conn = getConnection(); // Assuming this function gets the database connection
+    try {
+        $stmt = $conn->prepare("SELECT COUNT(*) AS total FROM subjects");
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['total'] ?? 0;
+    } catch (PDOException $e) {
+        return 0; // Return 0 if there's an error
+    }
+}
